@@ -1,7 +1,26 @@
 # Changelog
 
-All notable changes to this library will be documented in this file.
+## [Fork] RabbitMq Dependency Injection Fork
+**This is a fork of** [RabbitMQ.Client.Core.DependencyInjection](https://github.com/AntonyVorontsov/RabbitMQ.Client.Core.DependencyInjection)  
+**Original version forked from:** 5.0.0
 
+All notable changes to this library will be documented in this file.
+## [1.0.0] - 2025-09-28
+
+### Changed
+
+Replace Newtonsoft.Json with System.Text.Json for message deserialization
+
+### Updated
+- **All package dependencies updated to latest stable versions:**
+    - Microsoft.Extensions.* 8.0.1
+    - RabbitMQ.Client 6.8.1
+    - System.Text.Json 8.0.6
+  
+### Fixed
+- Compatibility issues with new package versions 
+
+## Original Project Changelog (for reference) 
 ## [4.3.0] - 2020-10-03
 
 ### Added

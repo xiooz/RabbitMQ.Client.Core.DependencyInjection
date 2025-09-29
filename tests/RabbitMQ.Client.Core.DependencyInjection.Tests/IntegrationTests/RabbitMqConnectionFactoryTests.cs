@@ -6,7 +6,7 @@ using Xunit;
 
 namespace RabbitMQ.Client.Core.DependencyInjection.Tests.IntegrationTests
 {
-    public class RabbitMqConnectionFactoryTests
+    public class RabbitMqConnectionFactoryTests : RabbitMqTestBase
     {
         [Theory]
         [InlineData(1)]
@@ -94,68 +94,65 @@ namespace RabbitMQ.Client.Core.DependencyInjection.Tests.IntegrationTests
         [Fact]
         public void ShouldProperlyCreateInitialConnection()
         {
-            var connectionOptions = new RabbitMqServiceOptions
-            {
-                HostName = "rabbitmq",
-                InitialConnectionRetries = 1,
-                InitialConnectionRetryTimeoutMilliseconds = 20
-            };
+            RabbitMqServiceOptions connectionOptions = base.CreateOptions();
+            connectionOptions.InitialConnectionRetries = 1;
+            connectionOptions.InitialConnectionRetryTimeoutMilliseconds = 20;
+            
             ExecuteSuccessfulConnectionCreationAndAssertResults(connectionOptions);
         }
 
         [Fact]
         public void ShouldProperlyCreateInitialConnectionWithConnectionName()
         {
-            var connectionOptions = new RabbitMqServiceOptions
-            {
-                HostName = "rabbitmq",
-                ClientProvidedName = "connectionName",
-                InitialConnectionRetries = 3,
-                InitialConnectionRetryTimeoutMilliseconds = 20
-            };
+            RabbitMqServiceOptions connectionOptions = base.CreateOptions();
+            connectionOptions.ClientProvidedName = "connectionName";
+            connectionOptions.InitialConnectionRetries = 3;
+            connectionOptions.InitialConnectionRetryTimeoutMilliseconds = 20;
+            
             ExecuteSuccessfulConnectionCreationAndAssertResults(connectionOptions);
         }
 
         [Fact]
         public void ShouldProperlyCreateInitialConnectionWithTcpEndpoints()
         {
-            var connectionOptions = new RabbitMqServiceOptions
+            RabbitMqServiceOptions connectionOptions = base.CreateOptions();
+            connectionOptions.TcpEndpoints = new List<RabbitMqTcpEndpoint>
             {
-                TcpEndpoints = new List<RabbitMqTcpEndpoint>
+                new()
                 {
-                    new()
-                    {
-                        HostName = "rabbitmq"
-                    }
-                },
-                InitialConnectionRetries = 3,
-                InitialConnectionRetryTimeoutMilliseconds = 20
+                    HostName = connectionOptions.HostName,
+                    Port = connectionOptions.Port
+                }
             };
+            connectionOptions.HostName = null!;
+            connectionOptions.HostNames.Clear();
+            connectionOptions.InitialConnectionRetries = 3;
+            connectionOptions.InitialConnectionRetryTimeoutMilliseconds = 20;
+            
             ExecuteSuccessfulConnectionCreationAndAssertResults(connectionOptions);
         }
 
         [Fact]
         public void ShouldProperlyCreateInitialConnectionWithHostNames()
         {
-            var connectionOptions = new RabbitMqServiceOptions
-            {
-                HostNames = new List<string> { "rabbitmq" },
-                InitialConnectionRetries = 3,
-                InitialConnectionRetryTimeoutMilliseconds = 20
-            };
+            RabbitMqServiceOptions connectionOptions = base.CreateOptions();
+            connectionOptions.HostNames = new List<string> { connectionOptions.HostName };
+            connectionOptions.HostName = null!;
+            connectionOptions.InitialConnectionRetries = 3;
+            connectionOptions.InitialConnectionRetryTimeoutMilliseconds = 20;
+            
             ExecuteSuccessfulConnectionCreationAndAssertResults(connectionOptions);
         }
 
         [Fact]
         public void ShouldProperlyCreateInitialConnectionWithHostNamesAndNamedConnection()
         {
-            var connectionOptions = new RabbitMqServiceOptions
-            {
-                HostNames = new List<string> { "rabbitmq" },
-                ClientProvidedName = "connectionName",
-                InitialConnectionRetries = 3,
-                InitialConnectionRetryTimeoutMilliseconds = 20
-            };
+            RabbitMqServiceOptions connectionOptions = base.CreateOptions();
+            connectionOptions.HostNames = new List<string> { connectionOptions.HostName };
+            connectionOptions.ClientProvidedName = "connectionName";
+            connectionOptions.InitialConnectionRetries = 3;
+            connectionOptions.InitialConnectionRetryTimeoutMilliseconds = 20;
+            
             ExecuteSuccessfulConnectionCreationAndAssertResults(connectionOptions);
         }
 
@@ -170,7 +167,7 @@ namespace RabbitMQ.Client.Core.DependencyInjection.Tests.IntegrationTests
         {
             var connectionFactory = new RabbitMqConnectionFactory();
             using var connection = connectionFactory.CreateRabbitMqConnection(connectionOptions);
-            Assert.True(connection.IsOpen);
+            Assert.True(connection!.IsOpen);
         }
     }
 }

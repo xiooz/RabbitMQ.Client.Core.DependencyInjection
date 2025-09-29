@@ -1,3 +1,11 @@
+# RabbitMQ Dependency Injection Fork
+
+**Fork of** [RabbitMQ.Client.Core.DependencyInjection](https://github.com/AntonyVorontsov/RabbitMQ.Client.Core.DependencyInjection)
+
+## Differences from original:
+- Updated all package dependencies to latest stable versions
+- Fixed compatibility issues
+
 # Documentation
 
 These files cover all functionality of the library and if the new feature comes out documentation will have details of that.

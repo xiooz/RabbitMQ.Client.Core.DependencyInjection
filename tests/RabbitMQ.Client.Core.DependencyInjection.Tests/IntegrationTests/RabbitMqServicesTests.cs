@@ -14,7 +14,7 @@ using Xunit;
 namespace RabbitMQ.Client.Core.DependencyInjection.Tests.IntegrationTests
 {
     [SuppressMessage("ReSharper", "AccessToDisposedClosure")]
-    public class RabbitMqServicesTests
+    public class RabbitMqServicesTests : RabbitMqTestBase
     {
         private readonly TimeSpan _globalTestsTimeout = TimeSpan.FromSeconds(60);
 
@@ -30,7 +30,7 @@ namespace RabbitMQ.Client.Core.DependencyInjection.Tests.IntegrationTests
             var serviceCollection = new ServiceCollection();
             serviceCollection
                 .AddSingleton(callerMock.Object)
-                .AddRabbitMqServices(GetClientOptions())
+                .AddRabbitMqServices(base.CreateOptions())
                 .AddExchange(DefaultExchangeName, GetExchangeOptions())
                 .AddMessageHandlerTransient<StubMessageHandler>(FirstRoutingKey)
                 .AddAsyncMessageHandlerTransient<StubAsyncMessageHandler>(SecondRoutingKey);
@@ -65,7 +65,7 @@ namespace RabbitMQ.Client.Core.DependencyInjection.Tests.IntegrationTests
             var serviceCollection = new ServiceCollection();
             serviceCollection
                 .AddSingleton(callerMock.Object)
-                .AddRabbitMqServices(GetClientOptions())
+                .AddRabbitMqServices(base.CreateOptions())
                 .AddExchange(DefaultExchangeName, GetExchangeOptions())
                 .AddMessageHandlerTransient<StubExceptionMessageHandler>(FirstRoutingKey);
 
@@ -91,16 +91,6 @@ namespace RabbitMQ.Client.Core.DependencyInjection.Tests.IntegrationTests
             }
             callerMock.Verify(x => x.Call(It.IsAny<string>()), Times.Exactly(RequeueAttempts + 1));
         }
-
-        private static RabbitMqServiceOptions GetClientOptions() =>
-            new()
-            {
-                HostName = "rabbitmq",
-                Port = 5672,
-                UserName = "guest",
-                Password = "guest",
-                VirtualHost = "/"
-            };
 
         private static RabbitMqExchangeOptions GetExchangeOptions() =>
             new()
